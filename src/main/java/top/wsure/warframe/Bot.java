@@ -31,9 +31,9 @@ import java.util.ResourceBundle;
  * {@link JcqAppAbstract#CC CC}({@link org.meowy.cqp.jcq.message.CQCode 酷Q码操作类}),
  * 具体功能可以查看文档
  */
-public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
+public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
-    public static final String AppID ="top.wsure.warframe.warframeBot";
+    public static final String AppID ="top.wsure.warframe.bot";
     /**
      * 关于新版：本版本只是为了测试下新做的插件能不能正常运行，并不包含任何 “新” 内容
      * 新：指代 打包，调试运行
@@ -51,7 +51,7 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
     /**
      * 老的方式依然支持，也就是不强行定构造方法也行
      */
-    public WarframeBot() {
+    public Bot() {
         CQ = this.getCoolQ();
     }
 
@@ -60,7 +60,7 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
      *
      * @param cq CQ初始化
      */
-    public WarframeBot(CoolQ cq) {
+    public Bot(CoolQ cq) {
         super(cq);
         CQ = cq;
     }
@@ -168,7 +168,7 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
      */
     public int privateMsg(int subType, int msgId, long fromQQ, String msg, int font) {
 
-        new MessageHandler().onPrivateMsg( subType,  msgId,  fromQQ,  msg,  font);
+        MessageHandler.getInstance().onPrivateMsg( subType,  msgId,  fromQQ,  msg,  font);
         // 这里处理消息
 //        CQ.sendPrivateMsg(fromQQ, "你发送了这样的消息：" + msg + "\n来自Java插件"+"\n"+messageCache.getCacheDataByKey("1s"));
         return MSG_IGNORE;
@@ -206,9 +206,7 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
         // String file = CQ.getImage(image);// 获取酷Q 下载的图片地址
 
         // 这里处理消息
-        if (fromGroup == 0L) { // 这里的 0L 可以换成您的测试群
-            CQ.sendGroupMsg(fromGroup, CC.at(fromQQ) + "你发送了这样的消息：" + msg + "\n来自Java插件");
-        }
+        MessageHandler.getInstance().onGroupMsg( subType,  msgId,  fromGroup,  fromQQ,  fromAnonymous,  msg,  font);
         return MSG_IGNORE;
     }
 
@@ -226,7 +224,8 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
      */
     public int discussMsg(int subtype, int msgId, long fromDiscuss, long fromQQ, String msg, int font) {
         // 这里处理消息
-
+        CQ.sendDiscussMsg(fromDiscuss,"溜了，我和讨论组聊不来");
+        CQ.setDiscussLeave(fromDiscuss);
         return MSG_IGNORE;
     }
 
@@ -263,7 +262,14 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
      */
     public int groupAdmin(int subtype, int sendTime, long fromGroup, long beingOperateQQ) {
         // 这里处理消息
-
+        switch (subtype){
+            case 1:
+                CQ.sendGroupMsg(fromGroup,"恭喜"+CC.at(beingOperateQQ)+"成为狗管理");
+                break;
+            case 2:
+                CQ.sendGroupMsg(fromGroup,"恭喜"+CC.at(beingOperateQQ)+"被下了狗管理");
+                break;
+        }
         return MSG_IGNORE;
     }
 
@@ -300,6 +306,7 @@ public class WarframeBot extends JcqAppAbstract implements ICQVer, IMsg, IReques
         CQ.logInfo("fromGroup", "" + fromGroup);
         CQ.logInfo("fromQQ", "" + fromQQ);
         CQ.logInfo("beingOperateQQ", "" + beingOperateQQ);
+        CQ.sendGroupMsg(fromGroup,CC.at(beingOperateQQ)+"欢迎新人");
         return MSG_IGNORE;
     }
 

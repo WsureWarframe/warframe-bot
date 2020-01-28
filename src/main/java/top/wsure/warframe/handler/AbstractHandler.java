@@ -10,4 +10,6 @@ public abstract class AbstractHandler {
 
     abstract void onPrivateMsg(int subType, int msgId, long fromQQ, String msg, int font);
 
+    abstract void onGroupMsg(int subType, int msgId, long fromGroup, long fromQQ, String fromAnonymous, String msg,
+                           int font);
 }

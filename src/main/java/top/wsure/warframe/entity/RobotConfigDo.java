@@ -21,11 +21,16 @@ public class RobotConfigDo {
 
     private String prefix;
 
+    private String host;
+
     private List<PersonDo> dev;
 
     private List<PersonDo> master;
 
     private List<MenuDo> menu;
 
-    private List<CommandDo> commands;
+    private Map<String,String> commands;
+
+    private List<String> disable;
+
 }

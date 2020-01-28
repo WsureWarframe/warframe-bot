@@ -5,8 +5,8 @@ import top.wsure.warframe.entity.RobotConfigDo;
 
 import java.io.*;
 
-import static top.wsure.warframe.WarframeBot.AppID;
-import static top.wsure.warframe.WarframeBot.CQ;
+import static top.wsure.warframe.Bot.AppID;
+import static top.wsure.warframe.Bot.CQ;
 
 /**
  * FileName: FileUtils

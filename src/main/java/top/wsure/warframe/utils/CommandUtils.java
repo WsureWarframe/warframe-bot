@@ -1,10 +1,12 @@
 package top.wsure.warframe.utils;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import top.wsure.warframe.entity.CommandDo;
 import top.wsure.warframe.entity.RobotConfigDo;
-import top.wsure.warframe.enums.RequestTypeEnum;
+import top.wsure.warframe.enums.CommandEnum;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static top.wsure.warframe.WarframeBot.*;
+import static top.wsure.warframe.Bot.*;
 
 /**
  * FileName: CommandUtils
@@ -33,15 +35,25 @@ public class CommandUtils {
         ).collect(Collectors.toList());
     }
 
+    /**
+     *
+     * @param robotConfig
+     * @return
+     */
     public static Map<String,CommandDo> createCommandMap(RobotConfigDo robotConfig){
-        if(robotConfig == null || robotConfig.getCommands() == null){
-            return Collections.EMPTY_MAP;
-        }
-        List<CommandDo> commandMap = robotConfig.getCommands();
+        List<String> disable = robotConfig.getDisable();
+        boolean hasDisable = CollectionUtils.isNotEmpty(disable);
+        Map<String,String> commandRename = robotConfig.getCommands();
+        boolean hasRename = MapUtils.isNotEmpty(commandRename);
+
+        List<CommandDo> commandMap = CommandEnum.commandDos();
         Map<String,CommandDo> res = new HashMap<>();
-        commandMap.forEach((command)->{
-                command.setNeedNetwork(RequestTypeEnum.isNetRequestType(command.getType()));
-                res.put(command.getAlias(),command);
+        commandMap.forEach( command -> {
+            if(hasRename && StringUtils.isNotBlank(commandRename.get(command.getAlias())))
+                command.setCommand(commandRename.get(command.getAlias()));
+            if(hasDisable && disable.contains(command.getAlias()))
+                command.setEnable(false);
+            res.put(command.getAlias(),command);
         });
         return res;
     }
@@ -49,14 +61,29 @@ public class CommandUtils {
         return CC.at(CQ.getLoginQQ());
     }
 
+    /**
+     * 识别指令
+     * @param input
+     * @param cmd
+     * @return
+     */
+
     public static boolean filterCommandMap(String input,CommandDo cmd){
-        StringBuilder regex = new StringBuilder("^\\s*" + cmd.getCommand() + "\\s*");
+        if(!cmd.isEnable()){
+            return false;
+        }
+
+        String command = cmd.getCommand().matches("[a-zA-Z]+") ?
+                ( "(("+cmd.getCommand()+")|("+cmd.getCommand().toUpperCase()+"))" ) :
+                cmd.getCommand();
+
+        StringBuilder regex = new StringBuilder("^\\s*" + command + "\\s*");
 
         Pattern withOutAt;
-        withOutAt = Pattern.compile("(?<=" + cmd.getCommand() + "\\s).+");
+        withOutAt = Pattern.compile("(?<=" + command + "\\s).+");
         Matcher matcher = withOutAt.matcher(input);
 
-        if (cmd.isHasParam()) {
+        if (cmd.getType().isNeedParam()) {
             regex.append("\\S+");
         } else {
             regex.append("$");
@@ -64,7 +91,7 @@ public class CommandUtils {
 
         if(input.toLowerCase().matches(regex.toString()))
         {
-            if (cmd.isHasParam()) {
+            if (cmd.getType().isNeedParam()) {
                 if( matcher.find()){
                     cmd.setParam(matcher.group());
                     return true;

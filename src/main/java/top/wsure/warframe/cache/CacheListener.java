@@ -1,7 +1,7 @@
 package top.wsure.warframe.cache;
 
 import top.wsure.warframe.enums.CacheEnum;
-import static top.wsure.warframe.WarframeBot.CQ;
+import static top.wsure.warframe.Bot.CQ;
 
 public class CacheListener extends Thread{
 

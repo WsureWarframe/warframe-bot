@@ -2,6 +2,7 @@ package top.wsure.warframe.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import top.wsure.warframe.enums.CommandTypeEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,11 +21,13 @@ public class CommandDo {
 
     private String alias;
 
-    private String type = "wf";
+    private String requestType = "wf";
 
-    private boolean hasParam;
+    private CommandTypeEnum type;
 
     private String param;
 
-    private boolean needNetwork;
+    private MenuDo menu;
+
+    private boolean enable = true;
 }

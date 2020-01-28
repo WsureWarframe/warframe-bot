@@ -1,4 +1,5 @@
 # Project exclude paths
 /target/
-warframeBot.iml
+bot.iml
 /.idea/
+warframeBot.iml

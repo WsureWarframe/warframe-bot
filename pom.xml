@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>top.wsure.warframe</groupId>
-    <artifactId>warframeBot</artifactId>
+    <artifactId>bot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -28,6 +28,11 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -61,6 +66,14 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -83,7 +96,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-file</id>
+                        <id>copy-jar</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -100,15 +113,43 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-config</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/data/app/org.meowy.cqp.jcq/app/${groupId}.${artifactId}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/java/top/wsure/warframe/config/</directory>
+                                    <includes>
+                                        <include>**/*.*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-json</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/data/app/org.meowy.cqp.jcq/app</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/</directory>
+                                    <includes>
+                                        <include>**/*.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>

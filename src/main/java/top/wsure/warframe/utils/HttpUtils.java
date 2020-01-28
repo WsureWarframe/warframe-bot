@@ -4,11 +4,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.collections.MapUtils;
+import top.wsure.warframe.entity.CommandDo;
+import top.wsure.warframe.enums.ExceptionMessageEnum;
 import top.wsure.warframe.enums.RequestTypeEnum;
+import top.wsure.warframe.exceptions.NetworkException;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
+
+import static top.wsure.warframe.Bot.CQ;
 
 /**
  * FileName: HttpUtils
@@ -24,7 +31,7 @@ public class HttpUtils {
 
 
 
-    public static String getContextRequest(String url, Map<String ,Object> params) {
+    public static String getContextRequest(String url, Map<String ,Object> params) throws NetworkException {
         OkHttpClient client = new OkHttpClient();
         String res = null;
         StringBuilder sb = new StringBuilder();
@@ -45,12 +52,19 @@ public class HttpUtils {
         try {
             Response response = client.newCall(request).execute();
             if(!response.isSuccessful()){
-                return null;
+                CQ.logWarning(response.code() + " request fail ! url",url);
+                throw new NetworkException(ExceptionMessageEnum.REQUEST_FAIL.getDesc());
             }
             res = response.body().string();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (ConnectException ce){
+            CQ.logWarning(ce.getMessage(),url);
+            throw new NetworkException(ExceptionMessageEnum.REQUEST_FAIL.getDesc());
+        }
+        catch (IOException e) {
+            CQ.logWarning(e.getMessage(),url);
+            throw new NetworkException(ExceptionMessageEnum.FORMAT_MESSAGE_FAIL.getDesc());
+
+
         }
 
         return res;
@@ -58,21 +72,25 @@ public class HttpUtils {
 
     public static void main(String[] args) {
         String url = "http://127.0.0.1:3000/rm/robot/兰卡";
-        System.out.println(getContextRequest(url , Collections.EMPTY_MAP));
+        try {
+            System.out.println(getContextRequest(url , Collections.EMPTY_MAP));
+        } catch (NetworkException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public static String urlBuilder(String host,String type,String alis,String param){
-        if(!RequestTypeEnum.isNetRequestType(type)){
+    public static String urlBuilder(String host, CommandDo cmd){
+        if(!RequestTypeEnum.isNetRequestType(cmd.getRequestType())){
             return null;
         }
-        StringBuilder builder = new StringBuilder(host+type);
+        StringBuilder builder = new StringBuilder(host+cmd.getRequestType());
         builder.append("/")
                 .append("robot/");
 
-        if(RequestTypeEnum.WARFRAME.equaledType(type)){
-            builder.append(alis);
+        if(RequestTypeEnum.WARFRAME.equaledType(cmd.getRequestType())){
+            builder.append(cmd.getAlias());
         } else {
-            builder.append(param);
+            builder.append(cmd.getParam());
         }
         return builder.toString();
     }
