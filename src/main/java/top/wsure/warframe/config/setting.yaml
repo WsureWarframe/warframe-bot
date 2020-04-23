@@ -15,7 +15,7 @@ menu:
   - question: help
     answer: adad
 
-#功能命令设置 英文指令名请全小写（禁止大小写混合，否则无法识别）
+#功能命令设置 英文指令名(command)请全小写（禁止大小写混合，否则无法识别）
 commands:
   - alia: timestamp
     command: 服务器时间
@@ -51,43 +51,43 @@ commands:
     type: networkWithoutParam
   - alia: flashSales
     command: 促销商品
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: invasions
     command: 入侵
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: voidTrader
     command: 奸商
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: dailyDeals
     command: 达尔沃
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: persistentEnemies
     command: 小小黑
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: earthCycle
     command: 地球
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: cetusCycle
     command: 平原
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: constructionProgress
     command: 舰队
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: vallisCycle
     command: 山谷
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: nightwave
     command: 电波
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   # 灰机wiki
   - alia: wiki
@@ -117,7 +117,6 @@ commands:
     command: 撤回
     componentName: game
     type: localGameWithoutParam
-
 # 禁用的模块
 disable:
   - beltAndRoadInitiative
