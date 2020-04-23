@@ -5,6 +5,8 @@ import top.wsure.warframe.exceptions.BotException;
 import top.wsure.warframe.exceptions.NetworkException;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * FileName: Test
@@ -21,6 +23,7 @@ public class Test {
      * @param args 系统参数
      */
     public static void main(String[] args) {
+
 
         // 要测试主类就先实例化一个主类对象
         Bot bot = new Bot();
@@ -44,7 +47,18 @@ public class Test {
         bot.privateMsg(0, 10002, 2222222224L, "一带一路 asd", 0);
         bot.privateMsg(0, 10002, 2222222224L, "一带一路", 0);
         bot.privateMsg(0, 10002, 2222222224L, "wm", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "wm asd", 0);
+        /* 线程池大小 5 */
+        ExecutorService executor = Executors.newFixedThreadPool(20);
+        for(int i=0;i<1000;i++){
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    bot.privateMsg(0, 10002, 2222222224L, "wm asd", 0);
+                }
+            });
+        }
+        executor.shutdown();
+
         bot.privateMsg(0, 10002, 2222222224L, "WM 脑溢血", 0);
         bot.privateMsg(0, 10002, 2222222224L, "wM asd", 0);
         bot.privateMsg(0, 10002, 2222222224L, "警报 asd", 0);

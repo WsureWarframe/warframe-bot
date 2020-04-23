@@ -2,22 +2,17 @@ package top.wsure.warframe;
 
 import org.meowy.cqp.jcq.entity.*;
 import org.meowy.cqp.jcq.event.JcqAppAbstract;
-import org.meowy.cqp.jcq.message.CQCode;
-import top.wsure.warframe.cache.CacheListener;
-import top.wsure.warframe.cache.CacheManagerImpl;
-import top.wsure.warframe.entity.CommandDo;
-import top.wsure.warframe.entity.RobotConfigDo;
-import top.wsure.warframe.enums.CacheEnum;
+import top.wsure.warframe.annotation.InitReflectionsMethod;
+import top.wsure.warframe.config.Constants;
+import top.wsure.warframe.entity.MessageDo;
+import top.wsure.warframe.enums.EventsEnum;
 import top.wsure.warframe.handler.MessageHandler;
 import top.wsure.warframe.utils.CommandUtils;
 import top.wsure.warframe.utils.FileUtils;
-
+import static top.wsure.warframe.config.Constants.*;
 import javax.swing.*;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.lang.reflect.Method;
+import java.util.stream.Collectors;
 
 /**
  * 本文件是JCQ插件的主类<br>
@@ -31,6 +26,7 @@ import java.util.ResourceBundle;
  * {@link JcqAppAbstract#CC CC}({@link org.meowy.cqp.jcq.message.CQCode 酷Q码操作类}),
  * 具体功能可以查看文档
  */
+
 public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
     public static final String AppID ="top.wsure.warframe.bot";
@@ -41,13 +37,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * 关于包名：可以通过批量替换将老程序里的[com.sobte]全部替换成[org.meowy]即可
      */
 
-    public static CQCode CC = new CQCode();
     public static CoolQ CQ = null;
-    private CacheListener listener = new CacheListener();
-    CacheManagerImpl warFrameCache = new CacheManagerImpl(CacheEnum.WAR_FRAME_CACHE.getName());
-    CacheManagerImpl messageCache = new CacheManagerImpl(CacheEnum.MESSAGE_CACHE.getName());
-    public static RobotConfigDo ROBOT_CONFIG ;
-    public static Map<String,CommandDo> ROBOT_COMMANDS ;
     /**
      * 老的方式依然支持，也就是不强行定构造方法也行
      */
@@ -90,6 +80,11 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * @return 请固定返回0
      */
     public int startup() {
+        // 注解方式加载各个模块
+        InitReflectionsMethod.init();
+        botEventMap.forEach( (k,v)->{
+            System.out.println("k:"+k+",v:"+v.stream().map(Method::getName).collect(Collectors.joining(",")));
+        });
 
         //缓存监听器
         listener.start();
@@ -168,10 +163,17 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      */
     public int privateMsg(int subType, int msgId, long fromQQ, String msg, int font) {
 
-        MessageHandler.getInstance().onPrivateMsg( subType,  msgId,  fromQQ,  msg,  font);
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.PRIVATE_MSG)
+                .subType(subType)
+                .msgId(msgId)
+                .fromQQ(fromQQ)
+                .msg(msg)
+                .font(font)
+                .build()
+        );
         // 这里处理消息
 //        CQ.sendPrivateMsg(fromQQ, "你发送了这样的消息：" + msg + "\n来自Java插件"+"\n"+messageCache.getCacheDataByKey("1s"));
-        return MSG_IGNORE;
     }
 
     /**
@@ -206,15 +208,24 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         // String file = CQ.getImage(image);// 获取酷Q 下载的图片地址
 
         // 这里处理消息
-        MessageHandler.getInstance().onGroupMsg( subType,  msgId,  fromGroup,  fromQQ,  fromAnonymous,  msg,  font);
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.GROUP_MSG)
+                .subType(subType)
+                .msgId(msgId)
+                .fromGroup(fromGroup)
+                .fromQQ(fromQQ)
+                .fromAnonymous(fromAnonymous)
+                .msg(msg)
+                .font(font)
+                .build()
+        );
     }
 
     /**
      * 讨论组消息 (Type=4)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype     子类型，目前固定为1
+     * @param subType     子类型，目前固定为1
      * @param msgId       消息ID
      * @param fromDiscuss 来源讨论组
      * @param fromQQ      来源QQ号
@@ -222,11 +233,20 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * @param font        字体
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int discussMsg(int subtype, int msgId, long fromDiscuss, long fromQQ, String msg, int font) {
+    public int discussMsg(int subType, int msgId, long fromDiscuss, long fromQQ, String msg, int font) {
         // 这里处理消息
         CQ.sendDiscussMsg(fromDiscuss,"溜了，我和讨论组聊不来");
         CQ.setDiscussLeave(fromDiscuss);
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.DISCUSS_MSG)
+                .subType(subType)
+                .msgId(msgId)
+                .fromDiscuss(fromDiscuss)
+                .fromQQ(fromQQ)
+                .msg(msg)
+                .font(font)
+                .build()
+        );
     }
 
     /**
@@ -247,22 +267,30 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         }
 
         // 这里处理消息
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.GROUP_UPLOAD)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromGroup(fromGroup)
+                .fromQQ(fromQQ)
+                .file(file)
+                .build()
+        );
     }
 
     /**
      * 群事件-管理员变动 (Type=101)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype        子类型，1/被取消管理员 2/被设置管理员
+     * @param subType        子类型，1/被取消管理员 2/被设置管理员
      * @param sendTime       发送时间(时间戳)
      * @param fromGroup      来源群号
      * @param beingOperateQQ 被操作QQ
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int groupAdmin(int subtype, int sendTime, long fromGroup, long beingOperateQQ) {
+    public int groupAdmin(int subType, int sendTime, long fromGroup, long beingOperateQQ) {
         // 这里处理消息
-        switch (subtype){
+        switch (subType){
             case 1:
                 CQ.sendGroupMsg(fromGroup,"恭喜"+CC.at(beingOperateQQ)+"成为狗管理");
                 break;
@@ -270,44 +298,67 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
                 CQ.sendGroupMsg(fromGroup,"恭喜"+CC.at(beingOperateQQ)+"被下了狗管理");
                 break;
         }
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.GROUP_ADMIN)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromGroup(fromGroup)
+                .beingOperateQQ(beingOperateQQ)
+                .build()
+        );
     }
 
     /**
      * 群事件-群成员减少 (Type=102)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype        子类型，1/群员离开 2/群员被踢
+     * @param subType        子类型，1/群员离开 2/群员被踢
      * @param sendTime       发送时间(时间戳)
      * @param fromGroup      来源群号
      * @param fromQQ         操作者QQ(仅子类型为2时存在)
      * @param beingOperateQQ 被操作QQ
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int groupMemberDecrease(int subtype, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ) {
+    public int groupMemberDecrease(int subType, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ) {
         // 这里处理消息
 
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.GROUP_MEMBER_DECREASE)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromGroup(fromGroup)
+                .fromQQ(fromQQ)
+                .beingOperateQQ(beingOperateQQ)
+                .build()
+        );
     }
 
     /**
      * 群事件-群成员增加 (Type=103)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype        子类型，1/管理员已同意 2/管理员邀请
+     * @param subType        子类型，1/管理员已同意 2/管理员邀请
      * @param sendTime       发送时间(时间戳)
      * @param fromGroup      来源群号
      * @param fromQQ         操作者QQ(即管理员QQ)
      * @param beingOperateQQ 被操作QQ(即加群的QQ)
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int groupMemberIncrease(int subtype, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ) {
+    public int groupMemberIncrease(int subType, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ) {
         // 这里处理消息
         CQ.logInfo("fromGroup", "" + fromGroup);
         CQ.logInfo("fromQQ", "" + fromQQ);
         CQ.logInfo("beingOperateQQ", "" + beingOperateQQ);
         CQ.sendGroupMsg(fromGroup,CC.at(beingOperateQQ)+"欢迎新人");
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.GROUP_MEMBER_INCREASE)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromGroup(fromGroup)
+                .fromQQ(fromQQ)
+                .beingOperateQQ(beingOperateQQ)
+                .build()
+        );
     }
 
     /**
@@ -325,36 +376,51 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     public int groupBan(int subType, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ, long duration) {
         // 这里处理消息
 
-        return 0;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.GROUP_BAN)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromGroup(fromGroup)
+                .fromQQ(fromQQ)
+                .beingOperateQQ(beingOperateQQ)
+                .duration(duration)
+                .build()
+        );
     }
 
     /**
      * 好友事件-好友已添加 (Type=201)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype  子类型，目前固定为1
+     * @param subType  子类型，目前固定为1
      * @param sendTime 发送时间(时间戳)
      * @param fromQQ   来源QQ
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int friendAdd(int subtype, int sendTime, long fromQQ) {
+    public int friendAdd(int subType, int sendTime, long fromQQ) {
         // 这里处理消息
 
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess( MessageDo.builder()
+                .event(EventsEnum.FRIEND_ADD)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromQQ(fromQQ)
+                .build()
+        );
     }
 
     /**
      * 请求-好友添加 (Type=301)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype      子类型，目前固定为1
+     * @param subType      子类型，目前固定为1
      * @param sendTime     发送时间(时间戳)
      * @param fromQQ       来源QQ
      * @param msg          附言
      * @param responseFlag 反馈标识(处理请求用)
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int requestAddFriend(int subtype, int sendTime, long fromQQ, String msg, String responseFlag) {
+    public int requestAddFriend(int subType, int sendTime, long fromQQ, String msg, String responseFlag) {
         // 这里处理消息
 
         /**
@@ -363,14 +429,22 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
          */
 
         // CQ.setFriendAddRequest(responseFlag, REQUEST_ADOPT, null); // 同意好友添加请求
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess( MessageDo.builder()
+                .event(EventsEnum.REQUEST_ADD_FRIEND)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromQQ(fromQQ)
+                .msg(msg)
+                .responseFlag(responseFlag)
+                .build()
+        );
     }
 
     /**
      * 请求-群添加 (Type=302)<br>
      * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @param subtype      子类型，1/他人申请入群 2/自己(即登录号)受邀入群
+     * @param subType      子类型，1/他人申请入群 2/自己(即登录号)受邀入群
      * @param sendTime     发送时间(时间戳)
      * @param fromGroup    来源群号
      * @param fromQQ       来源QQ
@@ -378,7 +452,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * @param responseFlag 反馈标识(处理请求用)
      * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    public int requestAddGroup(int subtype, int sendTime, long fromGroup, long fromQQ, String msg,
+    public int requestAddGroup(int subType, int sendTime, long fromGroup, long fromQQ, String msg,
                                String responseFlag) {
         // 这里处理消息
 
@@ -394,7 +468,16 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 		if(subtype == 2){
 			CQ.setGroupAddRequest(responseFlag, REQUEST_GROUP_INVITE, REQUEST_ADOPT, null);// 同意进受邀群
 		}*/
-        return MSG_IGNORE;
+        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+                .event(EventsEnum.REQUEST_ADD_GROUP)
+                .subType(subType)
+                .sendTime(sendTime)
+                .fromGroup(fromGroup)
+                .fromQQ(fromQQ)
+                .msg(msg)
+                .responseFlag(responseFlag)
+                .build()
+        );
     }
 
     /**

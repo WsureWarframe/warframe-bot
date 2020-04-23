@@ -2,9 +2,10 @@ package top.wsure.warframe.entity;
 
 import lombok.Data;
 import lombok.ToString;
-import top.wsure.warframe.enums.CommandTypeEnum;
+import top.wsure.warframe.enums.ComponentEnum;
+import top.wsure.warframe.enums.EventsEnum;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,17 +18,20 @@ import java.util.List;
 @ToString
 public class CommandDo {
 
+    /** 插件名 */
+    private String componentName;
+    /** 别名 */
+    private String alia;
+    /** 指令 */
     private String command;
-
-    private String alias;
-
-    private String requestType = "wf";
-
-    private CommandTypeEnum type;
-
+    /** 命令枚举类型 */
+    private ComponentEnum componentType;
+    /** 命令字符类型 */
+    private String type;
+    /** 事件枚举 */
+    private List<EventsEnum> events = new ArrayList<>();
+    /** 参数 */
     private String param;
-
-    private MenuDo menu;
-
+    /** 启用状态 */
     private boolean enable = true;
 }

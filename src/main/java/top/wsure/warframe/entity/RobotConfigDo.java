@@ -29,7 +29,7 @@ public class RobotConfigDo {
 
     private List<MenuDo> menu;
 
-    private Map<String,String> commands;
+    private List<CommandDo> commands;
 
     private List<String> disable;
 

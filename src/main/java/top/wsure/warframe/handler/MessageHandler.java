@@ -1,13 +1,20 @@
 package top.wsure.warframe.handler;
 
+import lombok.extern.java.Log;
 import org.apache.commons.collections.CollectionUtils;
-import top.wsure.warframe.core.MessageBuilder;
+import top.wsure.warframe.annotation.BotEvent;
+import top.wsure.warframe.annotation.BotEventType;
 import top.wsure.warframe.entity.CommandDo;
+import top.wsure.warframe.entity.MessageDo;
 import top.wsure.warframe.utils.CommandUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
-import static top.wsure.warframe.Bot.*;
+import static org.meowy.cqp.jcq.entity.IMsg.MSG_IGNORE;
+import static top.wsure.warframe.config.Constants.*;
 
 /**
  * FileName: MessageHandler
@@ -15,7 +22,8 @@ import static top.wsure.warframe.Bot.*;
  * Date:     2020/1/17 下午2:53
  * Description:
  */
-public class MessageHandler extends AbstractHandler{
+@Log
+public class MessageHandler {
 
     private static class MessageHandlerHolder {
         private static final MessageHandler INSTANCE = new MessageHandler();
@@ -26,29 +34,26 @@ public class MessageHandler extends AbstractHandler{
     public static final MessageHandler getInstance() {
         return MessageHandlerHolder.INSTANCE;
     }
-    private String test;
 
-    @Override
-    public void onPrivateMsg(int subType, int msgId, long fromQQ, String msg, int font) {
-        List<CommandDo> commands = CommandUtils.getCommand(msg);
+    public int messageProcess(MessageDo message){
+        List<CommandDo> commands = CommandUtils.getCommand(message.getMsg());
+        List<Method> methods = botEventMap.get(message.getEvent().getEvent());
+        if(CollectionUtils.isNotEmpty(methods)){
+            commands.forEach( cmd -> methods.stream().filter(
+                    method -> Arrays.asList( method.getAnnotation(BotEventType.class).alias()).contains(cmd.getAlia()) &&
+                            method.getDeclaringClass().getAnnotation(BotEvent.class).name().equals(cmd.getComponentName())
+            ).forEach( method -> {
+                try {
+                    log.info("开始执行" + cmd.getCommand() + " " + message.getEvent().getEvent() +" 方法"+method.getName());
+                    method.invoke(method.getDeclaringClass().newInstance(),message,cmd);
+                    log.info("执行结束" + cmd.getCommand() + " " + message.getEvent().getEvent() +" 方法"+method.getName());
+                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    log.warning(cmd.getCommand() + " " + message.getEvent().getEvent()+"执行失败，原因:"+e.getMessage());
+                    e.printStackTrace();
+                }
+            }));
 
-        CQ.logInfo("getCommand", commands.toString());
-        if(CollectionUtils.isNotEmpty(commands)){
-            commands.forEach( cmd ->{
-                CQ.sendPrivateMsg(fromQQ,new MessageBuilder(cmd).build().message());
-            });
         }
-    }
-
-    @Override
-    public void onGroupMsg(int subType, int msgId, long fromGroup, long fromQQ, String fromAnonymous, String msg, int font) {
-        List<CommandDo> commands = CommandUtils.getCommand(msg);
-
-        CQ.logInfo("getCommand", commands.toString());
-        if(CollectionUtils.isNotEmpty(commands)){
-            commands.forEach( cmd ->{
-                CQ.sendGroupMsg(fromGroup,CC.at(fromQQ) + new MessageBuilder(cmd).build().message());
-            });
-        }
+        return MSG_IGNORE;
     }
 }

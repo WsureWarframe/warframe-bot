@@ -8,7 +8,7 @@ import top.wsure.warframe.entity.PersonDo;
 import java.util.List;
 
 import static top.wsure.warframe.Bot.CQ;
-import static top.wsure.warframe.Bot.ROBOT_CONFIG;
+import static top.wsure.warframe.config.Constants.ROBOT_CONFIG;
 
 /**
  * FileName: ReportUtils

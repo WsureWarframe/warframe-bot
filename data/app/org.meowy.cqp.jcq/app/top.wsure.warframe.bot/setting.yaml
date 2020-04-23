@@ -15,38 +15,108 @@ menu:
   - question: help
     answer: adad
 
-#功能命令设置 英文指令名请全小写（禁止大小写混合，否则无法识别）
+#功能命令设置 英文指令名(command)请全小写（禁止大小写混合，否则无法识别）
 commands:
-  # warframe
-  timestamp: 服务器时间
-  news: 新闻
-  events: 活动
-  alerts: 警报
-  sortie: 突击
-  Ostrons: 地球赏金
-  Solaris: 金星赏金
-  fissures: 裂缝
-  flashSales: 促销商品
-  invasions: 入侵
-  voidTrader: 奸商
-  dailyDeals: 达尔沃
-  persistentEnemies: 小小黑
-  earthCycle: 地球
-  cetusCycle: 平原
-  constructionProgress: 舰队
-  vallisCycle: 山谷
-  nightwave: 电波
+  - alia: timestamp
+    command: 服务器时间
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: news
+    command: 新闻
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: events
+    command: 活动
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: alerts
+    command: 警报
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: sortie
+    command: 突击
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: Ostrons
+    command: 地球赏金
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: Solaris
+    command: 金星赏金
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: fissures
+    command: 裂缝
+    componentName: warframe
+    type: networkWithoutParam
+  - alia: flashSales
+    command: 促销商品
+    componentName: wf
+    type: networkWithoutParam
+  - alia: invasions
+    command: 入侵
+    componentName: wf
+    type: networkWithoutParam
+  - alia: voidTrader
+    command: 奸商
+    componentName: wf
+    type: networkWithoutParam
+  - alia: dailyDeals
+    command: 达尔沃
+    componentName: wf
+    type: networkWithoutParam
+  - alia: persistentEnemies
+    command: 小小黑
+    componentName: wf
+    type: networkWithoutParam
+  - alia: earthCycle
+    command: 地球
+    componentName: wf
+    type: networkWithoutParam
+  - alia: cetusCycle
+    command: 平原
+    componentName: wf
+    type: networkWithoutParam
+  - alia: constructionProgress
+    command: 舰队
+    componentName: wf
+    type: networkWithoutParam
+  - alia: vallisCycle
+    command: 山谷
+    componentName: wf
+    type: networkWithoutParam
+  - alia: nightwave
+    command: 电波
+    componentName: wf
+    type: networkWithoutParam
   # 灰机wiki
-  wiki: wiki
+  - alia: wiki
+    command: wiki
+    componentName: wiki
+    type: networkNeedParam
   # RivenMarket
-  rm: rm
+  - alia: rm
+    command: rm
+    componentName: rm
+    type: networkNeedParam
   # WarframeMarket
-  wm: wm
+  - alia: wm
+    command: wm
+    componentName: wm
+    type: networkNeedParam
   # Game
-  beltAndRoadInitiative: 一带一路
-  lottery: 抽奖
-  retract: 撤回
-
+  - alia: beltAndRoadInitiative
+    command: 一带一路
+    componentName: game
+    type: localGameNeedParam
+  - alia: lottery
+    command: 抽奖
+    componentName: game
+    type: localGameWithoutParam
+  - alia: retract
+    command: 撤回
+    componentName: game
+    type: localGameWithoutParam
 # 禁用的模块
 disable:
   - beltAndRoadInitiative

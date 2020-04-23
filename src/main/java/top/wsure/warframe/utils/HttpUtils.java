@@ -1,12 +1,12 @@
 package top.wsure.warframe.utils;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.collections.MapUtils;
 import top.wsure.warframe.entity.CommandDo;
 import top.wsure.warframe.enums.ExceptionMessageEnum;
-import top.wsure.warframe.enums.RequestTypeEnum;
 import top.wsure.warframe.exceptions.NetworkException;
 
 import java.io.IOException;
@@ -14,6 +14,8 @@ import java.net.ConnectException;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static top.wsure.warframe.Bot.CQ;
 
@@ -32,36 +34,39 @@ public class HttpUtils {
 
 
     public static String getContextRequest(String url, Map<String ,Object> params) throws NetworkException {
-        OkHttpClient client = new OkHttpClient();
+        long startTime = System.currentTimeMillis();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
         String res = null;
         StringBuilder sb = new StringBuilder();
-        params.forEach( (k,v) ->{
-            sb
-                    .append("&")
-                    .append(k)
-                    .append("=")
-                    .append(v)
-            ;
-        });
+        params.forEach( (k,v) -> sb
+                .append("&")
+                .append(k)
+                .append("=")
+                .append(v));
         url = MapUtils.isEmpty(params) ? url : url + sb.toString();
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader(UA.getKey(),UA.getValue())
+//                .addHeader(UA.getKey(),UA.getValue())
+                .get()
                 .build();
-
+        Call call = client.newCall(request);
         try {
-            Response response = client.newCall(request).execute();
+            Response response = call.execute();
             if(!response.isSuccessful()){
-                CQ.logWarning(response.code() + " request fail ! url",url);
+                CQ.logWarning(response.code() + " request fail ! url",url+" requestTime:"+(System.currentTimeMillis()-startTime)+"ms");
                 throw new NetworkException(ExceptionMessageEnum.REQUEST_FAIL.getDesc());
             }
-            res = response.body().string();
+            res = Objects.requireNonNull(response.body()).string();
         } catch (ConnectException ce){
-            CQ.logWarning(ce.getMessage(),url);
+            CQ.logWarning(ce.getMessage(),url+" requestTime:"+(System.currentTimeMillis()-startTime)+"ms");
             throw new NetworkException(ExceptionMessageEnum.REQUEST_FAIL.getDesc());
         }
         catch (IOException e) {
-            CQ.logWarning(e.getMessage(),url);
+            CQ.logWarning(e.getMessage(),url+" requestTime:"+(System.currentTimeMillis()-startTime)+"ms");
             throw new NetworkException(ExceptionMessageEnum.FORMAT_MESSAGE_FAIL.getDesc());
 
 
@@ -79,19 +84,5 @@ public class HttpUtils {
         }
     }
 
-    public static String urlBuilder(String host, CommandDo cmd){
-        if(!RequestTypeEnum.isNetRequestType(cmd.getRequestType())){
-            return null;
-        }
-        StringBuilder builder = new StringBuilder(host+cmd.getRequestType());
-        builder.append("/")
-                .append("robot/");
 
-        if(RequestTypeEnum.WARFRAME.equaledType(cmd.getRequestType())){
-            builder.append(cmd.getAlias());
-        } else {
-            builder.append(cmd.getParam());
-        }
-        return builder.toString();
-    }
 }
