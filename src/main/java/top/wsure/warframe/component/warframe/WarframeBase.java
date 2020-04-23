@@ -3,16 +3,16 @@ package top.wsure.warframe.component.warframe;
 import top.wsure.warframe.utils.MessageBuilder;
 import top.wsure.warframe.entity.CommandDo;
 import top.wsure.warframe.entity.MessageDo;
-import top.wsure.warframe.enums.ComponentEnum;
-import top.wsure.warframe.exceptions.BotException;
+import top.wsure.warframe.common.enums.ComponentEnum;
+import top.wsure.warframe.common.exceptions.BotException;
 import top.wsure.warframe.utils.HttpUtils;
 
 import java.util.Collections;
 
 import static org.meowy.cqp.jcq.entity.IMsg.MSG_IGNORE;
-import static top.wsure.warframe.config.Constants.CC;
+import static top.wsure.warframe.common.config.Constants.CC;
 import static top.wsure.warframe.Bot.CQ;
-import static top.wsure.warframe.config.Constants.ROBOT_CONFIG;
+import static top.wsure.warframe.common.config.Constants.ROBOT_CONFIG;
 
 /**
  * FileName: WarframeInfo

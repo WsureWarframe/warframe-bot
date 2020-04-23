@@ -3,7 +3,7 @@ package top.wsure.warframe.utils;
 import org.apache.commons.collections.CollectionUtils;
 import top.wsure.warframe.entity.CommandDo;
 import top.wsure.warframe.entity.RobotConfigDo;
-import top.wsure.warframe.enums.ComponentEnum;
+import top.wsure.warframe.common.enums.ComponentEnum;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static top.wsure.warframe.Bot.CQ;
-import static top.wsure.warframe.config.Constants.*;
+import static top.wsure.warframe.common.config.Constants.*;
 
 /**
  * FileName: CommandUtils

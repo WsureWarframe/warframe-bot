@@ -6,9 +6,10 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.MethodParameterScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ConfigurationBuilder;
-import top.wsure.warframe.annotation.BotEvent;
-import top.wsure.warframe.annotation.BotEventType;
+import top.wsure.warframe.common.annotation.BotEvent;
+import top.wsure.warframe.common.annotation.BotEventType;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Set;
 
@@ -31,12 +32,12 @@ public class ReflectionsUtils {
      * 如果没有配置scanner，默认使用SubTypesScanner和TypeAnnotationsScanner
      * @return
      */
-    public static Set<Class<?>> getFullReflections(){
+    public static Set<Class<?>> getFullReflections(Class<? extends Annotation> clazz){
 
-        return reflections.getTypesAnnotatedWith(BotEvent.class);
+        return reflections.getTypesAnnotatedWith(clazz);
     }
 
-    public static Set<Method> getAnnotatedMethod(){
-        return reflections.getMethodsAnnotatedWith(BotEventType.class);
+    public static Set<Method> getAnnotatedMethod(Class<? extends Annotation> clazz){
+        return reflections.getMethodsAnnotatedWith(clazz);
     }
 }

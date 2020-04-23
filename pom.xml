@@ -49,6 +49,11 @@
             <artifactId>reflections</artifactId>
             <version>0.9.12</version>
         </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -127,9 +132,9 @@
                             <outputDirectory>${basedir}/data/app/org.meowy.cqp.jcq/app/${groupId}.${artifactId}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/src/main/java/top/wsure/warframe/config/</directory>
+                                    <directory>${basedir}/src/main/java/top/wsure/warframe/common/config/</directory>
                                     <includes>
-                                        <include>**/*.*</include>
+                                        <include>**/*.yaml</include>
                                     </includes>
                                 </resource>
                             </resources>

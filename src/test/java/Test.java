@@ -1,8 +1,8 @@
 import org.meowy.cqp.jcq.entity.CoolQ;
 import top.wsure.warframe.Bot;
-import top.wsure.warframe.enums.CommandEnum;
-import top.wsure.warframe.exceptions.BotException;
-import top.wsure.warframe.exceptions.NetworkException;
+import top.wsure.warframe.common.enums.CommandEnum;
+import top.wsure.warframe.common.exceptions.BotException;
+import top.wsure.warframe.common.exceptions.NetworkException;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;

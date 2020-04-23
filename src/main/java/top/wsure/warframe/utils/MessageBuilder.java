@@ -2,7 +2,7 @@ package top.wsure.warframe.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import static top.wsure.warframe.config.Constants.ROBOT_CONFIG;
+import static top.wsure.warframe.common.config.Constants.ROBOT_CONFIG;
 /**
  * FileName: MessageBuilder
  * Author:   Administrator

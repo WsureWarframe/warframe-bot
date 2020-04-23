@@ -1,14 +1,7 @@
-import org.apache.commons.lang3.tuple.Pair;
-import org.reflections.Reflections;
-import top.wsure.warframe.annotation.BotEvent;
-import top.wsure.warframe.annotation.BotEventType;
-import top.wsure.warframe.entity.MessageDo;
+import top.wsure.warframe.common.annotation.BotEvent;
 import top.wsure.warframe.utils.ReflectionsUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * FileName: Test2
@@ -22,7 +15,7 @@ public class Test2 {
         List<String> l1 = Arrays.asList("1","2");
         Optional<String> s = l1.stream().filter(v->v.equals("3")).findFirst();
         System.out.println(s.orElse(null));
-        Set<Class<?>> classes =  ReflectionsUtils.getFullReflections();
+        Set<Class<?>> classes =  ReflectionsUtils.getFullReflections(BotEvent.class);
         classes.forEach( clazz -> System.out.println(clazz.getName()));
 
 //        Map<String,List< Method>> map = new HashMap<>();

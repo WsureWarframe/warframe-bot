@@ -2,8 +2,8 @@ package top.wsure.warframe.entity;
 
 import lombok.Data;
 import lombok.ToString;
-import top.wsure.warframe.enums.ComponentEnum;
-import top.wsure.warframe.enums.EventsEnum;
+import top.wsure.warframe.common.enums.ComponentEnum;
+import top.wsure.warframe.common.enums.EventsEnum;
 
 import java.util.ArrayList;
 import java.util.List;

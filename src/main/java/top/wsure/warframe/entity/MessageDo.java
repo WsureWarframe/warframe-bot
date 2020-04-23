@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-import top.wsure.warframe.enums.EventsEnum;
+import top.wsure.warframe.common.enums.EventsEnum;
 
 /**
  * FileName: MessageDo

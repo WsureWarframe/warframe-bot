@@ -5,9 +5,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.collections.MapUtils;
-import top.wsure.warframe.entity.CommandDo;
-import top.wsure.warframe.enums.ExceptionMessageEnum;
-import top.wsure.warframe.exceptions.NetworkException;
+import top.wsure.warframe.common.enums.ExceptionMessageEnum;
+import top.wsure.warframe.common.exceptions.NetworkException;
 
 import java.io.IOException;
 import java.net.ConnectException;

@@ -2,14 +2,14 @@ package top.wsure.warframe;
 
 import org.meowy.cqp.jcq.entity.*;
 import org.meowy.cqp.jcq.event.JcqAppAbstract;
-import top.wsure.warframe.annotation.InitReflectionsMethod;
-import top.wsure.warframe.config.Constants;
+import top.wsure.warframe.common.core.InitReflectionsMethod;
+import top.wsure.warframe.common.core.WsureCQ;
 import top.wsure.warframe.entity.MessageDo;
-import top.wsure.warframe.enums.EventsEnum;
-import top.wsure.warframe.handler.MessageHandler;
+import top.wsure.warframe.common.enums.EventsEnum;
+import top.wsure.warframe.common.core.EventHandler;
 import top.wsure.warframe.utils.CommandUtils;
 import top.wsure.warframe.utils.FileUtils;
-import static top.wsure.warframe.config.Constants.*;
+import static top.wsure.warframe.common.config.Constants.*;
 import javax.swing.*;
 import java.lang.reflect.Method;
 import java.util.stream.Collectors;
@@ -42,7 +42,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * 老的方式依然支持，也就是不强行定构造方法也行
      */
     public Bot() {
-        CQ = this.getCoolQ();
+        CQ = new WsureCQ(this.getCoolQ()).getProxyCoolQ();
     }
 
     /**
@@ -52,7 +52,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      */
     public Bot(CoolQ cq) {
         super(cq);
-        CQ = cq;
+        CQ = new WsureCQ(cq).getProxyCoolQ();
     }
 
 
@@ -95,14 +95,6 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
         CQ.logInfo("config",FileUtils.importYaml().getRobotName());
 
-        warFrameCache.putCache("test","res",100L);
-        messageCache.putCache("1s","bubu",1500L);
-        CQ.logInfo("startup()","sleep 1s!");
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         CQ.logInfo("startup()","week up!");
         // 返回如：D:\CoolQ\data\app\org.meowy.cqp.jcq\data\app\com.example.demo\
         // 应用的所有数据、配置【必须】存放于此目录，避免给用户带来困扰。
@@ -163,7 +155,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      */
     public int privateMsg(int subType, int msgId, long fromQQ, String msg, int font) {
 
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.PRIVATE_MSG)
                 .subType(subType)
                 .msgId(msgId)
@@ -208,7 +200,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         // String file = CQ.getImage(image);// 获取酷Q 下载的图片地址
 
         // 这里处理消息
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.GROUP_MSG)
                 .subType(subType)
                 .msgId(msgId)
@@ -237,7 +229,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         // 这里处理消息
         CQ.sendDiscussMsg(fromDiscuss,"溜了，我和讨论组聊不来");
         CQ.setDiscussLeave(fromDiscuss);
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.DISCUSS_MSG)
                 .subType(subType)
                 .msgId(msgId)
@@ -267,7 +259,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         }
 
         // 这里处理消息
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.GROUP_UPLOAD)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -298,7 +290,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
                 CQ.sendGroupMsg(fromGroup,"恭喜"+CC.at(beingOperateQQ)+"被下了狗管理");
                 break;
         }
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.GROUP_ADMIN)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -322,7 +314,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     public int groupMemberDecrease(int subType, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ) {
         // 这里处理消息
 
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.GROUP_MEMBER_DECREASE)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -350,7 +342,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         CQ.logInfo("fromQQ", "" + fromQQ);
         CQ.logInfo("beingOperateQQ", "" + beingOperateQQ);
         CQ.sendGroupMsg(fromGroup,CC.at(beingOperateQQ)+"欢迎新人");
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.GROUP_MEMBER_INCREASE)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -376,7 +368,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     public int groupBan(int subType, int sendTime, long fromGroup, long fromQQ, long beingOperateQQ, long duration) {
         // 这里处理消息
 
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.GROUP_BAN)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -400,7 +392,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     public int friendAdd(int subType, int sendTime, long fromQQ) {
         // 这里处理消息
 
-        return MessageHandler.getInstance().messageProcess( MessageDo.builder()
+        return EventHandler.getInstance().eventProcess( MessageDo.builder()
                 .event(EventsEnum.FRIEND_ADD)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -429,7 +421,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
          */
 
         // CQ.setFriendAddRequest(responseFlag, REQUEST_ADOPT, null); // 同意好友添加请求
-        return MessageHandler.getInstance().messageProcess( MessageDo.builder()
+        return EventHandler.getInstance().eventProcess( MessageDo.builder()
                 .event(EventsEnum.REQUEST_ADD_FRIEND)
                 .subType(subType)
                 .sendTime(sendTime)
@@ -468,7 +460,7 @@ public class Bot extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 		if(subtype == 2){
 			CQ.setGroupAddRequest(responseFlag, REQUEST_GROUP_INVITE, REQUEST_ADOPT, null);// 同意进受邀群
 		}*/
-        return MessageHandler.getInstance().messageProcess(MessageDo.builder()
+        return EventHandler.getInstance().eventProcess(MessageDo.builder()
                 .event(EventsEnum.REQUEST_ADD_GROUP)
                 .subType(subType)
                 .sendTime(sendTime)

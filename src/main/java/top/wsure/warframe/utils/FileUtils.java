@@ -34,7 +34,7 @@ public class FileUtils {
             if(dumpFile.exists()){
                 in = new FileInputStream(dumpFile);
             } else {
-                in = FileUtils.class.getResourceAsStream("../config/setting.yaml");
+                in = FileUtils.class.getResourceAsStream("../common/config/setting.yaml");
             }
             YamlReader yamlReader = new YamlReader(new InputStreamReader(in));
 

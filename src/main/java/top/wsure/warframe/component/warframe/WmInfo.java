@@ -1,10 +1,10 @@
 package top.wsure.warframe.component.warframe;
 
-import top.wsure.warframe.annotation.BotEvent;
-import top.wsure.warframe.annotation.BotEventType;
+import top.wsure.warframe.common.annotation.BotEvent;
+import top.wsure.warframe.common.annotation.BotEventType;
 import top.wsure.warframe.entity.CommandDo;
 import top.wsure.warframe.entity.MessageDo;
-import top.wsure.warframe.enums.EventsEnum;
+import top.wsure.warframe.common.enums.EventsEnum;
 
 /**
  * FileName: WikiInfo
