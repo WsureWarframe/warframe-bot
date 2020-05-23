@@ -6,12 +6,13 @@ import top.wsure.bot.Bot;
 import static top.wsure.warframe.MyCache.test;
 
 /**
- * FileName: WarframeBot
+ * FileName: Warframebot
  * Author:   Administrator
  * Date:     2020-5-5
  * Description: Bot
+ * 草！不要问我为什么类名这样写，鬼知道这是什么bug，类名只允许首字母大写，我也很无奈
  */
-public class WarframeBot extends Bot {
+public class Warframebot extends Bot {
 
 
     /**
@@ -19,7 +20,7 @@ public class WarframeBot extends Bot {
      *
      * @param cq CQ初始化
      */
-    public WarframeBot(CoolQ cq) {
+    public Warframebot(CoolQ cq) {
         super(cq);
     }
 

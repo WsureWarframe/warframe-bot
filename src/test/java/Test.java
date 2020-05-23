@@ -3,7 +3,7 @@ import org.meowy.cqp.jcq.entity.CoolQ;
 import top.wsure.bot.common.enums.CommandEnum;
 import top.wsure.bot.common.exceptions.BotException;
 import top.wsure.bot.common.exceptions.NetworkException;
-import top.wsure.warframe.WarframeBot;
+import top.wsure.warframe.Warframebot;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -27,7 +27,7 @@ public class Test {
 
 
         // 要测试主类就先实例化一个主类对象
-        WarframeBot bot = new WarframeBot(new CQDebug());
+        Warframebot bot = new Warframebot(new CQDebug());
         // 获取当前酷Q操作对象
         CoolQ CQ = bot.getCoolQ();
         CQ.logInfo("[JCQ] TEST Demo", "测试启动");// 现在就可以用CQ变量来执行任何想要的操作了

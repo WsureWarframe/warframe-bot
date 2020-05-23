@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>top.wsure.warframe</groupId>
-    <artifactId>WarframeBot</artifactId>
+    <artifactId>warframebot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -70,24 +70,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-jar</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/data/app/org.meowy.cqp.jcq/app</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}/</directory>
-                                    <includes>
-                                        <include>${groupId}.${artifactId}.jar</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>copy-config</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -121,6 +103,28 @@
                                     </includes>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="${basedir}/data/app/org.meowy.cqp.jcq/app"/>
+                                <copy todir="${basedir}/data/app/org.meowy.cqp.jcq/app" overwrite="true" >
+                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
+                                        <include name="${groupId}.${artifactId}.jar" />
+                                    </fileset>
+                                </copy>
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>

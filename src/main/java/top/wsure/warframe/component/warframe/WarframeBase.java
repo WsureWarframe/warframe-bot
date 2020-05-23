@@ -11,7 +11,7 @@ import java.util.Collections;
 
 import static org.meowy.cqp.jcq.entity.IMsg.MSG_IGNORE;
 import static top.wsure.bot.common.config.Constants.CC;
-import static top.wsure.warframe.WarframeBot.CQ;
+import static top.wsure.warframe.Warframebot.CQ;
 import static top.wsure.bot.common.config.Constants.ROBOT_CONFIG;
 
 /**
