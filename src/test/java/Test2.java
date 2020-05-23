@@ -1,5 +1,5 @@
-import top.wsure.warframe.common.annotation.BotEvent;
-import top.wsure.warframe.utils.ReflectionsUtils;
+import top.wsure.bot.common.annotation.BotEvent;
+import top.wsure.bot.utils.ReflectionsUtils;
 
 import java.util.*;
 

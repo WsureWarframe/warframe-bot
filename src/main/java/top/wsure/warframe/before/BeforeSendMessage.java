@@ -1,8 +1,8 @@
 package top.wsure.warframe.before;
 
 import lombok.extern.java.Log;
-import top.wsure.warframe.common.annotation.ApiBefore;
-import top.wsure.warframe.common.annotation.BotApiBeforeDo;
+import top.wsure.bot.common.annotation.ApiBefore;
+import top.wsure.bot.common.annotation.BotApiBeforeDo;
 
 /**
  * FileName: BeforeSendMessage

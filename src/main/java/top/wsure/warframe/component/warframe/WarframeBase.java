@@ -1,18 +1,18 @@
 package top.wsure.warframe.component.warframe;
 
-import top.wsure.warframe.utils.MessageBuilder;
-import top.wsure.warframe.entity.CommandDo;
-import top.wsure.warframe.entity.MessageDo;
-import top.wsure.warframe.common.enums.ComponentEnum;
-import top.wsure.warframe.common.exceptions.BotException;
+import top.wsure.bot.utils.MessageBuilder;
+import top.wsure.bot.entity.CommandDo;
+import top.wsure.bot.entity.MessageDo;
+import top.wsure.bot.common.enums.ComponentEnum;
+import top.wsure.bot.common.exceptions.BotException;
 import top.wsure.warframe.utils.HttpUtils;
 
 import java.util.Collections;
 
 import static org.meowy.cqp.jcq.entity.IMsg.MSG_IGNORE;
-import static top.wsure.warframe.common.config.Constants.CC;
-import static top.wsure.warframe.Bot.CQ;
-import static top.wsure.warframe.common.config.Constants.ROBOT_CONFIG;
+import static top.wsure.bot.common.config.Constants.CC;
+import static top.wsure.warframe.WarframeBot.CQ;
+import static top.wsure.bot.common.config.Constants.ROBOT_CONFIG;
 
 /**
  * FileName: WarframeInfo
@@ -50,9 +50,9 @@ public class WarframeBase {
                 .append("robot/");
 
         if(ComponentEnum.isNeedParam(cmd.getComponentType().getType())){
-            builder.append(cmd.getAlia());
-        } else {
             builder.append(cmd.getParam());
+        } else {
+            builder.append(cmd.getAlia());
         }
         return builder.toString();
     }

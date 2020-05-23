@@ -5,8 +5,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.collections.MapUtils;
-import top.wsure.warframe.common.enums.ExceptionMessageEnum;
-import top.wsure.warframe.common.exceptions.NetworkException;
+import top.wsure.bot.common.enums.ExceptionMessageEnum;
+import top.wsure.bot.common.exceptions.NetworkException;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static top.wsure.warframe.Bot.CQ;
+import static top.wsure.bot.Bot.CQ;
 
 /**
  * FileName: HttpUtils

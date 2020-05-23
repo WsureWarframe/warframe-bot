@@ -19,35 +19,35 @@ menu:
 commands:
   - alia: timestamp
     command: 服务器时间
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: news
     command: 新闻
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: events
     command: 活动
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: alerts
     command: 警报
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: sortie
     command: 突击
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: Ostrons
     command: 地球赏金
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: Solaris
     command: 金星赏金
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: fissures
     command: 裂缝
-    componentName: warframe
+    componentName: wf
     type: networkWithoutParam
   - alia: flashSales
     command: 促销商品
@@ -114,9 +114,19 @@ commands:
     componentName: game
     type: localGameWithoutParam
   - alia: retract
-    command: 撤回
+    command: 撤回！
     componentName: game
     type: localGameWithoutParam
+  # Base
+  - alia: sendToAllGroup
+    command: 发送全部群
+    componentName: base
+    type: localGameNeedParam
+  - alia: send
+    command: 发送全部群
+    componentName: base
+    type: localGameNeedParam
+
 # 禁用的模块
 disable:
   - none

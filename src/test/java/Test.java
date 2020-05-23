@@ -1,8 +1,9 @@
+import org.meowy.cqp.jcq.entity.CQDebug;
 import org.meowy.cqp.jcq.entity.CoolQ;
-import top.wsure.warframe.Bot;
-import top.wsure.warframe.common.enums.CommandEnum;
-import top.wsure.warframe.common.exceptions.BotException;
-import top.wsure.warframe.common.exceptions.NetworkException;
+import top.wsure.bot.common.enums.CommandEnum;
+import top.wsure.bot.common.exceptions.BotException;
+import top.wsure.bot.common.exceptions.NetworkException;
+import top.wsure.warframe.WarframeBot;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +27,7 @@ public class Test {
 
 
         // 要测试主类就先实例化一个主类对象
-        Bot bot = new Bot();
+        WarframeBot bot = new WarframeBot(new CQDebug());
         // 获取当前酷Q操作对象
         CoolQ CQ = bot.getCoolQ();
         CQ.logInfo("[JCQ] TEST Demo", "测试启动");// 现在就可以用CQ变量来执行任何想要的操作了
@@ -48,13 +49,10 @@ public class Test {
         bot.privateMsg(0, 10002, 2222222224L, "一带一路", 0);
         bot.privateMsg(0, 10002, 2222222224L, "wm", 0);
         /* 线程池大小 5 */
-        ExecutorService executor = Executors.newFixedThreadPool(20);
-        for(int i=0;i<1000;i++){
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    bot.privateMsg(0, 10002, 2222222224L, "wm asd", 0);
-                }
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        for(int i=0;i<10;i++){
+            executor.submit(() -> {
+                bot.privateMsg(0, 10002, 2222222224L, "wm asd", 0);
             });
         }
         executor.shutdown();
@@ -63,6 +61,7 @@ public class Test {
         bot.privateMsg(0, 10002, 2222222224L, "wM asd", 0);
         bot.privateMsg(0, 10002, 2222222224L, "警报 asd", 0);
         bot.privateMsg(0, 10002, 2222222224L, "警报", 0);
+        bot.privateMsg(0, 10002, 2222222224L, "撤回", 0);
 
         bot.groupMsg(0, 10002, 2222222224L,888888L,"","警报", 0);
         // 模拟群聊消息
