@@ -1,6 +1,5 @@
 import org.meowy.cqp.jcq.entity.CQDebug;
 import org.meowy.cqp.jcq.entity.CoolQ;
-import top.wsure.bot.common.enums.CommandEnum;
 import top.wsure.bot.common.exceptions.BotException;
 import top.wsure.bot.common.exceptions.NetworkException;
 import top.wsure.warframe.Warframebot;
@@ -32,7 +31,6 @@ public class Test {
         CoolQ CQ = bot.getCoolQ();
         CQ.logInfo("[JCQ] TEST Demo", "测试启动");// 现在就可以用CQ变量来执行任何想要的操作了
         CQ.logInfo("args", Arrays.toString(args));
-        CQ.logInfo("Commands", CommandEnum.commandDos().toString());
         try {
             throw new NetworkException("asdasd");
         }catch (BotException e){
@@ -45,25 +43,27 @@ public class Test {
         // 开始模拟发送消息
         // 模拟私聊消息
         // 开始模拟QQ用户发送消息，以下QQ全部编造，请勿添加
-        bot.privateMsg(0, 10002, 2222222224L, "一带一路 asd", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "一带一路", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "wm", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "一带一路 asd", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "一带一路", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "wm", 0);
+//        bot.groupAdmin(1,12313,1232133L,123213123L);
         /* 线程池大小 5 */
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        for(int i=0;i<10;i++){
-            executor.submit(() -> {
-                bot.privateMsg(0, 10002, 2222222224L, "wm asd", 0);
-            });
-        }
-        executor.shutdown();
-
-        bot.privateMsg(0, 10002, 2222222224L, "WM 脑溢血", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "wM asd", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "警报 asd", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "警报", 0);
-        bot.privateMsg(0, 10002, 2222222224L, "撤回", 0);
-
-        bot.groupMsg(0, 10002, 2222222224L,888888L,"","警报", 0);
+//        ExecutorService executor = Executors.newFixedThreadPool(2);
+//        for(int i=0;i<10;i++){
+//            executor.submit(() -> {
+//                bot.privateMsg(0, 10002, 2222222224L, "wm asd", 0);
+//            });
+//        }
+//        executor.shutdown();
+//
+//        bot.privateMsg(0, 10002, 2222222224L, "WM 脑溢血", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "wM asd", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "警报 asd", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "警报", 0);
+//        bot.privateMsg(0, 10002, 2222222224L, "撤回", 0);
+//
+//        bot.groupMsg(0, 10002, 2222222224L,888888L,"","警报", 0);
+        bot.groupMsg(0, 10002, 435021808L,844157922L,"","一带一路 [CQ:at,qq=3401442003]", 0);
         // 模拟群聊消息
         // 开始模拟群聊消息
         bot.groupMsg(0, 10006, 3456789012L, 3333333334L, "", "菜单", 0);

@@ -19,7 +19,7 @@ import static org.meowy.cqp.jcq.entity.IMsg.MSG_IGNORE;
 @BotEvent(name = "base",level = CommandAuthorityEnum.MASTER)
 public class BaseComponent {
 
-    @BotEventType(alias = "sendToAllGroup",type = EventsEnum.GROUP_MSG)
+    @BotEventType(alias = "sendToAllGroup",type = {EventsEnum.GROUP_MSG,EventsEnum.PRIVATE_MSG})
     public int sendToAllGroup(MessageDo msg, CommandDo cmd){
         ReportUtils.sendToAllGroup(cmd.getParam());
         return MSG_IGNORE;

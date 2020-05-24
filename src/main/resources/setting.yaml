@@ -106,9 +106,9 @@ commands:
     type: networkNeedParam
   # Game
   - alia: beltAndRoadInitiative
-    command: 一带一路
+    command: beltAndRoadInitiative
     componentName: game
-    type: localGameNeedParam
+    type: localListener
   - alia: lottery
     command: 抽奖
     componentName: game
@@ -117,12 +117,12 @@ commands:
     command: 撤回！
     componentName: game
     type: localGameWithoutParam
+  - alia: repeater
+    command: repeater
+    componentName: game
+    type: localListener
   # Base
   - alia: sendToAllGroup
-    command: 发送全部群
-    componentName: base
-    type: localGameNeedParam
-  - alia: send
     command: 发送全部群
     componentName: base
     type: localGameNeedParam
