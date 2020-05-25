@@ -24,6 +24,13 @@ public class Warframebot extends Bot {
         super(cq);
     }
 
+    /**
+     * 使用新的方式加载CQ （建议使用这种方式）
+     *
+     * @param cq CQ初始化
+     */
+
+
     @Override
     public void onStart() {
         test.putCache("test","hahahah",1000L);
