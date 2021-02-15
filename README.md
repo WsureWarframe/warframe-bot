@@ -1,5 +1,7 @@
-# warframe-bot
+# warframe-bot(已废弃，JCQ无了)
 jcq-warframe-bot
+
+#### 此项目将重已重构，请移步 [【warframe-world-state】](https://github.com/WsureDev/warframe-world-state)
 
 ### 重要的事只说一次：
 
